@@ -24,6 +24,10 @@ app.add_middleware(
 async def health_check():
     return {"status": "healthy"}
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
 # Error handler
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):

@@ -12,7 +12,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./demucs:/app
+      - ./images/demucs:/app
     depends_on:
       - fastapi-base
     environment:
