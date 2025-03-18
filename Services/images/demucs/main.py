@@ -1,41 +1,23 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-import uvicorn
+import os
+from fastapi import FastAPI
+import demucs.separate
+
+# demucs.separate.main(["--mp3", "--two-stems", "vocals", "-n", "mdx_extra", "track with space.mp3"])
+
+# Get base path from environment variable or use default
+base_path = os.getenv("BASE_PATH", "/demucs")
 
 app = FastAPI(
     title="Demucs Service",
     description="Service for audio source separation using Demucs",
-    version="1.0.0"
+    version="1.0.0",
+    root_path=base_path  # Set the root path for all routes
 )
-
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Health check endpoint
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Demucs Service Running"}
 
-# Error handler
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request, exc):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"message": exc.detail},
-    )
-
-# Main execution
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+@app.post("/separate")
+async def separate_audio():
+    return {"status": "processing"}
