@@ -1,0 +1,25 @@
+services:
+  fastapi-base:
+    build:
+      context: ./fastapi
+      dockerfile: Dockerfile
+    image: fastapi-base:latest
+
+  samplify-demucs:
+    build:
+      context: ./images/demucs
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./images/demucs:/app
+    depends_on:
+      - fastapi-base
+    environment:
+      - MODULE_NAME=main
+      - BASE_PATH=/demucs
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+networks:
+  default:
+    name: samplify-network
