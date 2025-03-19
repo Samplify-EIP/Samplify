@@ -81,7 +81,7 @@ async def separate_audio(audio_file: UploadFile = File(...), model: str = "htdem
         channel.basic_publish(
             exchange="",
             routing_key=RABBITMQ_QUEUE,
-            body=json.dumps(message).encode(), #Use json.dumps
+            body=json.dumps(message).encode(),
             properties=pika.BasicProperties(
                 delivery_mode=2,
             ),
